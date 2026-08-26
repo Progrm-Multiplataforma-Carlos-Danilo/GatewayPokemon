@@ -40,7 +40,9 @@ public class RouteConfig {
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .pathMatchers(
                                 "/auth/**",
-                                "/login/**"
+                                "/login/**",
+                                "/v1/auth/**",
+                                "/v1/auth"
                         ).permitAll()
                         .anyExchange().authenticated()
                 ).oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
