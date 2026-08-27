@@ -20,8 +20,10 @@ public class GatewayCorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowedOrigins(properties.getUrl());
+        cors.setAllowedOrigins(List.of("http://localhost:8081"));
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         cors.setAllowedHeaders(List.of("*"));
+        cors.setExposedHeaders(List.of("Authorization"));
         cors.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

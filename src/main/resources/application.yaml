@@ -40,7 +40,7 @@ spring:
         - id: api-login
           uri: lb://api-login
           predicates:
-            - Path=/login/**, /auth/**, /v1/auth/**, /v1/auth
+            - Path=/v1/**,/v1/auth/**,
           filters:
             - name: Retry
               args:

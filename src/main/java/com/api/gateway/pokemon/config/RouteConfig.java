@@ -42,7 +42,11 @@ public class RouteConfig {
                                 "/auth/**",
                                 "/login/**",
                                 "/v1/auth/**",
-                                "/v1/auth"
+                                "/v1/auth",
+                                "/v1/create",
+                                "/v1/create/**",
+                                "/v1/logout",
+                                "/v1/logout/**"
                         ).permitAll()
                         .anyExchange().authenticated()
                 ).oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
