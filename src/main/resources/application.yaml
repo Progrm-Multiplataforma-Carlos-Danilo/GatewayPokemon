@@ -12,6 +12,8 @@ spring:
             login:
               - uri: http://localhost:8082
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Access-Control-Allow-Headers Access-Control-Allow-Methods Access-Control-Expose-Headers, RETAIN_FIRST
       routes:
         - id: login
           uri: lb://login
@@ -29,10 +31,11 @@ spring:
                   factor: 2
                   basedOnPreviousValue: true
 
-cors:
-  url:
-    - http://localhost:3000
-    - https://localhost:3000
+  cors:
+    url:
+      - http://localhost:8081
+      - http://localhost:3000
+      - https://localhost:3000
 
 logging:
   level:
