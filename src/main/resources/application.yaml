@@ -4,70 +4,35 @@ server:
 spring:
   application:
     name: gateway
-
   cloud:
     discovery:
       client:
         simple:
           instances:
-            api-produto:
-              - uri: http://localhost:8081
+            login:
               - uri: http://localhost:8082
-            api-login:
-              - uri: http://localhost:8082
-            api-cliente:
-              - uri: http://localhost:8085
-              - uri: http://localhost:8086
-
     gateway:
       routes:
-        - id: api-produto
-          uri: lb://api-produto
+        - id: login
+          uri: lb://login
           predicates:
-            - Path=/produto/**
+            - Path=/v1/**, /login/**, /auth/**
           filters:
             - name: Retry
               args:
                 retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE, NOT_FOUND
-                methods: GET, POST
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET
                 backoff:
                   firstBackoff: 10ms
                   maxBackoff: 50ms
                   factor: 2
                   basedOnPreviousValue: true
 
-        - id: api-login
-          uri: lb://api-login
-          predicates:
-            - Path=/v1/**,/v1/auth/**,
-          filters:
-            - name: Retry
-              args:
-                retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE, NOT_FOUND
-                methods: GET, POST
-                backoff:
-                  firstBackoff: 10ms
-                  maxBackoff: 50ms
-                  factor: 2
-                  basedOnPreviousValue: true
-
-        - id: api-cliente
-          uri: lb://api-cliente
-          predicates:
-            - Path=/cliente/**
-          filters:
-            - name: Retry
-              args:
-                retries: 3
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE, NOT_FOUND
-                methods: GET, POST
-                backoff:
-                  firstBackoff: 10ms
-                  maxBackoff: 50ms
-                  factor: 2
-                  basedOnPreviousValue: true
+cors:
+  url:
+    - http://localhost:3000
+    - https://localhost:3000
 
 logging:
   level:
