@@ -11,12 +11,18 @@ spring:
           instances:
             login:
               - uri: http://localhost:8082
-            card-pokemon:
-              - uri: http://localhost:8085
-            marketplace:
-              - uri: http://localhost:8084
+              - uri: http://localhost:8086
             usuario:
               - uri: http://localhost:8083
+              - uri: http://localhost:8087
+            marketplace:
+              - uri: http://localhost:8084
+              - uri: http://localhost:8088
+            card-pokemon:
+              - uri: http://localhost:8085
+              - uri: http://localhost:8089
+
+              
     gateway:
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Access-Control-Allow-Headers Access-Control-Allow-Methods Access-Control-Expose-Headers, RETAIN_FIRST
