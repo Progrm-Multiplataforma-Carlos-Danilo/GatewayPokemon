@@ -28,7 +28,8 @@ public class RouteConfig {
                                 "/v1/create",
                                 "/v1/create/**",
                                 "/v1/logout",
-                                "/v1/logout/**"
+                                "/v1/logout/**",
+                                "/usuario/cadastrar"
                         ).permitAll()
                         .anyExchange().authenticated()
                 ).oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
