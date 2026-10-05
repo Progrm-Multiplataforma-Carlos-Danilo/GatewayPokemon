@@ -11,6 +11,12 @@ spring:
           instances:
             login:
               - uri: http://localhost:8082
+            card-pokemon:
+              - uri: http://localhost:8085
+            marketplace:
+              - uri: http://localhost:8084
+            usuario:
+              - uri: http://localhost:8083
     gateway:
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Access-Control-Allow-Headers Access-Control-Allow-Methods Access-Control-Expose-Headers, RETAIN_FIRST
@@ -30,12 +36,58 @@ spring:
                   maxBackoff: 50ms
                   factor: 2
                   basedOnPreviousValue: true
+        - id: card-pokemon
+          uri: lb://card-pokemon
+          predicates:
+            - Path=/card-pokemon/**
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: true
+        - id: marketplace
+          uri: lb://marketplace
+          predicates:
+            - Path=/api/venda-poke/**
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: true
+        - id: usuario
+          uri: lb://usuario
+          predicates:
+            - Path=/usuario/**
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: true
 
   cors:
     url:
       - http://localhost:8081
       - http://localhost:3000
       - https://localhost:3000
+
 
 logging:
   level:
