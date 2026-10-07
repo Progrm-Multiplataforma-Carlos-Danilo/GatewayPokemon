@@ -11,16 +11,12 @@ spring:
           instances:
             login:
               - uri: http://localhost:8082
-              - uri: http://localhost:8086
             usuario:
               - uri: http://localhost:8083
-              - uri: http://localhost:8087
             marketplace:
               - uri: http://localhost:8084
-              - uri: http://localhost:8088
             card-pokemon:
               - uri: http://localhost:8085
-              - uri: http://localhost:8089
 
               
     gateway:
