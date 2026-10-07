@@ -30,7 +30,7 @@ public class GatewayCorsConfig {
         }
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         cors.setAllowedHeaders(List.of("*"));
-        cors.setExposedHeaders(List.of("Authorization"));
+        cors.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
         cors.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
