@@ -10,13 +10,13 @@ spring:
         simple:
           instances:
             login:
-              - uri: http://localhost:8082
+              - uri: ${LOGIN_URL:http://localhost:8082}
             usuario:
-              - uri: http://localhost:8083
+              - uri: ${USUARIO_URL:http://localhost:8083}
             marketplace:
-              - uri: http://localhost:8084
+              - uri: ${MARKETPLACE_URL:http://localhost:8084}
             card-pokemon:
-              - uri: http://localhost:8085
+              - uri: ${CARD_POKEMON_URL:http://localhost:8085}
 
               
     gateway:
@@ -85,10 +85,7 @@ spring:
                   basedOnPreviousValue: true
 
   cors:
-    url:
-      - http://localhost:8081
-      - http://localhost:3000
-      - https://localhost:3000
+    url: ${CORS_ORIGINS:http://localhost:8081,http://localhost:3000,https://localhost:3000}
 
 
 logging:
