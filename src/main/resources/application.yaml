@@ -91,3 +91,6 @@ spring:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET}
