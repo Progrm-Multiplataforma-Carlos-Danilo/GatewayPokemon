@@ -31,6 +31,10 @@ public class RouteConfig {
                                 "/v1/logout/**",
                                 "/usuario/cadastrar"
                         ).permitAll()
+                        // Listar e deletar usuários é só para administradores.
+                        // Pesquisar e atualizar o próprio perfil continuam liberados para qualquer usuário logado (o frontend usa).
+                        .pathMatchers(HttpMethod.GET, "/usuario/listar").hasAuthority("ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.DELETE, "/usuario/**").hasAuthority("ROLE_ADMIN")
                         // Gerenciar cards e baixar estoque é só para administradores.
                         // Consultar cards (select e select-all) continua liberado para qualquer usuário logado.
                         .pathMatchers(
