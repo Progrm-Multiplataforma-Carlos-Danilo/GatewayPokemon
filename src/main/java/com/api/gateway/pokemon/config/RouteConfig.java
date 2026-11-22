@@ -31,6 +31,14 @@ public class RouteConfig {
                                 "/v1/logout/**",
                                 "/usuario/cadastrar"
                         ).permitAll()
+                        // Gerenciar cards e baixar estoque é só para administradores.
+                        // Consultar cards (select e select-all) continua liberado para qualquer usuário logado.
+                        .pathMatchers(
+                                "/card-pokemon/save",
+                                "/card-pokemon/update",
+                                "/card-pokemon/delete/**",
+                                "/card-pokemon/stock-out"
+                        ).hasAuthority("ROLE_ADMIN")
                         .anyExchange().authenticated()
                 ).oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
                 .build();
