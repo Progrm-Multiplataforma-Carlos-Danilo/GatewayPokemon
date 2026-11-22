@@ -26,7 +26,9 @@ public class GatewayCorsConfig {
         if (properties != null && properties.getUrl() != null && !properties.getUrl().isEmpty()) {
             cors.setAllowedOriginPatterns(properties.getUrl());
         } else {
-            cors.setAllowedOriginPatterns(List.of("*"));
+            // Sem origens configuradas, não libera nenhuma. Liberar "*" com credenciais
+            // deixaria qualquer site chamar a API com os cookies do usuário.
+            cors.setAllowedOriginPatterns(List.of());
         }
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         cors.setAllowedHeaders(List.of("*"));
