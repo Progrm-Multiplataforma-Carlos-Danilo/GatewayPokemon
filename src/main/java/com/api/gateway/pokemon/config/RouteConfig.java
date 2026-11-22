@@ -31,10 +31,9 @@ public class RouteConfig {
                                 "/v1/logout/**",
                                 "/usuario/cadastrar"
                         ).permitAll()
-                        // Listar, atualizar e deletar usuários é só para administradores.
-                        // Pesquisar um usuário continua liberado para qualquer usuário logado.
+                        // Listar e deletar usuários é só para administradores.
+                        // Pesquisar e atualizar o próprio perfil continuam liberados para qualquer usuário logado (o frontend usa).
                         .pathMatchers(HttpMethod.GET, "/usuario/listar").hasAuthority("ROLE_ADMIN")
-                        .pathMatchers(HttpMethod.PUT, "/usuario/atualizar/**").hasAuthority("ROLE_ADMIN")
                         .pathMatchers(HttpMethod.DELETE, "/usuario/**").hasAuthority("ROLE_ADMIN")
                         .anyExchange().authenticated()
                 ).oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
