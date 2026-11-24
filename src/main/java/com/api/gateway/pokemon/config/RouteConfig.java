@@ -8,6 +8,11 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.http.HttpCookie;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.web.server.authentication.ServerBearerTokenAuthenticationConverter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 
 @Configuration
@@ -44,8 +49,23 @@ public class RouteConfig {
                                 "/card-pokemon/stock-out"
                         ).hasAuthority("ROLE_ADMIN")
                         .anyExchange().authenticated()
-                ).oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+                ).oauth2ResourceServer(oauth -> oauth
+                        .bearerTokenConverter(tokenDoCookie())
+                        .jwt(Customizer.withDefaults()))
                 .build();
+    }
+
+    // Lê o JWT do cookie HttpOnly "access_token" (o front autentica só por cookie).
+    // Sem cookie, cai no header "Authorization: Bearer" (útil para o Postman).
+    private ServerAuthenticationConverter tokenDoCookie() {
+        ServerBearerTokenAuthenticationConverter doHeader = new ServerBearerTokenAuthenticationConverter();
+        return exchange -> {
+            HttpCookie cookie = exchange.getRequest().getCookies().getFirst("access_token");
+            if (cookie != null && !cookie.getValue().isBlank()) {
+                return Mono.just(new BearerTokenAuthenticationToken(cookie.getValue()));
+            }
+            return doHeader.convert(exchange);
+        };
     }
 
     @Bean
