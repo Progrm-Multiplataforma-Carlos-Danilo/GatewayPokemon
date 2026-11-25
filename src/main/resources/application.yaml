@@ -5,6 +5,11 @@ spring:
   application:
     name: gateway
   cloud:
+    # Necessário na imagem nativa: o AOT só prepara o LoadBalancer dos serviços listados aqui.
+    # Ao criar uma rota lb:// nova, inclua o serviço nesta lista.
+    loadbalancer:
+      eager-load:
+        clients: login,usuario,marketplace,card-pokemon
     discovery:
       client:
         simple:
