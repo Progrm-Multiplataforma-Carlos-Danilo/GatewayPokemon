@@ -11,18 +11,14 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
- * Filtro global que converte o cookie HttpOnly "access_token" em um header
- * "Authorization: Bearer <token>" antes que o OAuth2 Resource Server valide
- * a requisição.
+ * Filtro global que repassa o cookie HttpOnly "access_token" aos serviços como
+ * header "Authorization: Bearer <token>".
  *
- * Ordem de precedência:
- *   1. Se o header Authorization já estiver presente → não faz nada (Bearer
- *      enviado pelo frontend tem prioridade).
- *   2. Se não houver Authorization mas houver o cookie → injeta o header.
- *   3. Se nenhum dos dois → deixa passar (o Resource Server retornará 401).
+ * Como todo GlobalFilter, roda depois do Spring Security: quem autentica o cookie
+ * no próprio Gateway é o bearerTokenConverter do {@link RouteConfig}.
  *
- * Isso permite autenticação híbrida: o frontend pode usar Bearer OU cookie,
- * e ambos funcionam no Gateway.
+ * Não altera a requisição nas rotas de {@link EntryPaths}, quando o header
+ * Authorization já existe ou quando não há cookie.
  */
 @Component
 public class CookieToAuthorizationFilter implements GlobalFilter, Ordered {
@@ -33,8 +29,8 @@ public class CookieToAuthorizationFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
-        // Se já possui Authorization header, segue sem alteração.
-        if (request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+        // Nas rotas de entrada, ou se já houver Authorization header, segue sem alteração.
+        if (EntryPaths.matches(request) || request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
             return chain.filter(exchange);
         }
 
@@ -53,8 +49,7 @@ public class CookieToAuthorizationFilter implements GlobalFilter, Ordered {
     }
 
     /**
-     * Prioridade máxima: deve rodar ANTES do filtro de segurança OAuth2
-     * (que tem ordem -1 no Spring Security reactive).
+     * Prioridade máxima entre os filtros do Gateway: o header é definido antes do roteamento.
      */
     @Override
     public int getOrder() {
