@@ -57,11 +57,12 @@ public class RouteConfig {
 
     // Lê o JWT do cookie HttpOnly "access_token" (o front autentica só por cookie).
     // Sem cookie, cai no header "Authorization: Bearer" (útil para o Postman).
+    // Nas rotas de entrada o cookie é ignorado: um token vencido ou inválido não pode barrar o login.
     private ServerAuthenticationConverter tokenDoCookie() {
         ServerBearerTokenAuthenticationConverter doHeader = new ServerBearerTokenAuthenticationConverter();
         return exchange -> {
             HttpCookie cookie = exchange.getRequest().getCookies().getFirst("access_token");
-            if (cookie != null && !cookie.getValue().isBlank()) {
+            if (cookie != null && !cookie.getValue().isBlank() && !EntryPaths.matches(exchange.getRequest())) {
                 return Mono.just(new BearerTokenAuthenticationToken(cookie.getValue()));
             }
             return doHeader.convert(exchange);
